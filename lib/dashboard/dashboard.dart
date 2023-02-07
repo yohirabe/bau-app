@@ -62,7 +62,10 @@ class _DashboardState extends State<Dashboard> {
                   setState(() {});
                 }
               },
-              child: const Text('Add New Patient'),
+              child: const Text(
+                'Add New Patient',
+                style: TextStyle(fontSize: 18),
+              ),
             ),
           ),
           const MedicalControlButton(),
@@ -85,13 +88,8 @@ class _DashboardState extends State<Dashboard> {
                   padding: const EdgeInsets.all(10),
                   itemCount: snapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      clipBehavior: Clip.antiAlias,
-                      child: PatientElement(
-                        patient: snapshot.data![index],
-                      ),
+                    return PatientElement(
+                      patient: snapshot.data![index],
                     );
                   }),
             ),

@@ -7,9 +7,9 @@ class MedicalControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
+    return OutlinedButton(
         onPressed: () async {
-          // TODO: get real phone number, possibly from API
+          // TODO: get real phone number from a config file
           final Uri phone = Uri.parse("tel:+1234567890");
 
           try {
@@ -18,6 +18,7 @@ class MedicalControlButton extends StatelessWidget {
             throw ("Cannot dial");
           }
         },
+        style: OutlinedButton.styleFrom(shape: const StadiumBorder()),
         child: const Text("Call Medical Control"));
   }
 }

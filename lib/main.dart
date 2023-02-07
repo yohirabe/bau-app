@@ -3,11 +3,19 @@ import 'package:flutter/material.dart';
 import 'dashboard/dashboard.dart';
 import 'locator.dart';
 
-void main() {
-  locatorSetup();
+void main() async {
+  // Certificate stuff
+  // WidgetsFlutterBinding.ensureInitialized();
+  // ByteData data =
+  //     await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+  // SecurityContext.defaultContext
+  //     .setTrustedCertificatesBytes(data.buffer.asUint8List());
+
+  // TODO: remove when proper certs are added
+  HttpOverrides.global = MyHttpOverrides();
+
+  setupLocator(); // Child widgets can use this to locate api service.
   runApp(const MyApp());
-  HttpOverrides.global =
-      MyHttpOverrides(); // TODO: remove when proper certs are added
 }
 
 class MyApp extends StatelessWidget {
@@ -41,7 +49,7 @@ class _RootPageState extends State<RootPage> {
   }
 }
 
-// TODO: Do this properly with certificates!
+// TODO: Remove when using proper certificates!
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {

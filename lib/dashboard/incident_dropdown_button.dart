@@ -44,7 +44,11 @@ class _IncidentDropdownButtonState extends State<IncidentDropdownButton> {
               }).toList(),
             );
           } else if (snapshot.hasError) {
-            return Text('$snapshot.error');
+            //return Text('$snapshot.error');
+            return InkWell(
+              child: const Text("An error occurred, tap to retry."),
+              onTap: () => setState(() {}),
+            );
           }
           return const CircularProgressIndicator();
         });
