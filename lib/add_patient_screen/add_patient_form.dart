@@ -37,88 +37,11 @@ class _AddPatientFormState extends State<AddPatientForm> {
     return Form(
       key: _formKey,
       child: Column(children: <Widget>[
-        Row(children: <Widget>[
-          Expanded(
-            child: TextFormField(
-              controller: _incidentText,
-              onSaved: (newValue) => _incident = newValue,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Enter an incident number';
-                }
-                return null;
-              },
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Incident'),
-            ),
-          ),
-          Expanded(
-            child: IncidentDropdownButton(
-              persistentHintText: "Select an incident",
-              callback: ((value) {
-                _incident = value;
-                _incidentText.text = value;
-              }),
-            ),
-          )
-        ]),
-        DropdownButtonFormField<String>(
-          hint: const Text('Gender'),
-          onSaved: (newValue) {
-            _selectedGender = newValue;
-          },
-          items:
-              _genderCodes.keys.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: ((value) {
-            _selectedGender = value;
-          }),
-          validator: (value) {
-            if (value == null) {
-              return "Select a gender";
-            }
-            return null;
-          },
-        ),
-        TextFormField(
-          onSaved: (newValue) => _estimatedAge = int.parse(newValue!),
-          validator: (value) {
-            if (value == "") return "Enter an estimated age";
-            if (value == null || !value.isDigits) {
-              return 'Age must be digits only';
-            }
-            return null;
-          },
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: 'Estimated Age'),
-        ),
-        TextFormField(
-          controller: _statusText,
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            errorStyle: TextStyle(
-              color: Theme.of(context).errorColor, // or any other color
-            ),
-          ),
-          style: TextStyle(
-            backgroundColor: statusColors[_status ?? 3],
-            color: Colors.white,
-            fontSize: 30,
-          ),
-          enabled: false,
-          onSaved: ((value) {}),
-          validator: (value) {
-            // TODO: needs fix, works but doesn't show up.
-            if (value!.isEmpty) {
-              return 'Complete the guided-triage';
-            }
-            return null;
-          },
-        ),
+        incidentFormFields(),
+        genderFormField(),
+        ageFormField(),
+        statusFormField(context),
+        // Guided-Triage button
         ElevatedButton(
           onPressed: () async {
             GuidedTriageResult? result = await Navigator.push(
@@ -154,6 +77,7 @@ class _AddPatientFormState extends State<AddPatientForm> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     Patient patient = Patient(
+                      id: null,
                       incident: _incident!,
                       gender: _genderCodes[_selectedGender]!,
                       estimatedAge: _estimatedAge!,
@@ -165,10 +89,10 @@ class _AddPatientFormState extends State<AddPatientForm> {
                       const SnackBar(content: Text('Uploading Patient')),
                     );
 
-                    Future<Patient> _futurePatient =
+                    Future<Patient> futurePatient =
                         locator<ApiService>().createPatient(patient);
                     // TODO: display confirmation that patient was created based on response
-                    // TODO: Make refresh on exit more consistent
+                    // TODO: Make refresh on exit consistent
                     // Pop with the additonal argument true, so that the dashboard knows
                     // to refresh its widgets
                     Navigator.pop(context, true);
@@ -182,5 +106,97 @@ class _AddPatientFormState extends State<AddPatientForm> {
         const MedicalControlButton(),
       ]),
     );
+  }
+
+  TextFormField statusFormField(BuildContext context) {
+    return TextFormField(
+      controller: _statusText,
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        errorStyle: TextStyle(
+          color: Theme.of(context).errorColor, // or any other color
+        ),
+      ),
+      style: TextStyle(
+        backgroundColor: statusColors[_status ?? 3],
+        color: Colors.white,
+        fontSize: 30,
+      ),
+      enabled: false,
+      onSaved: ((value) {}),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Complete the guided-triage';
+        }
+        return null;
+      },
+    );
+  }
+
+  TextFormField ageFormField() {
+    return TextFormField(
+      onSaved: (newValue) => _estimatedAge = int.parse(newValue!),
+      validator: (value) {
+        if (value == "") return "Enter an estimated age";
+        if (value == null || !value.isDigits) {
+          return 'Age must be digits only';
+        }
+        return null;
+      },
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(labelText: 'Estimated Age'),
+    );
+  }
+
+  DropdownButtonFormField<String> genderFormField() {
+    return DropdownButtonFormField<String>(
+      hint: const Text('Gender'),
+      onSaved: (newValue) {
+        _selectedGender = newValue;
+      },
+      items: _genderCodes.keys.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: ((value) {
+        _selectedGender = value;
+      }),
+      validator: (value) {
+        if (value == null) {
+          return "Select a gender";
+        }
+        return null;
+      },
+    );
+  }
+
+  Row incidentFormFields() {
+    return Row(children: <Widget>[
+      Expanded(
+        child: TextFormField(
+          controller: _incidentText,
+          onSaved: (newValue) => _incident = newValue,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Enter an incident number';
+            }
+            return null;
+          },
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: 'Incident'),
+        ),
+      ),
+      Expanded(
+        child: IncidentDropdownButton(
+          persistentHintText: "Select an incident",
+          callback: ((value) {
+            _incident = value;
+            _incidentText.text = value;
+          }),
+        ),
+      )
+    ]);
   }
 }

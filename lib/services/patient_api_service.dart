@@ -3,7 +3,9 @@ import 'package:http/http.dart' as http;
 import '../models/patient.dart';
 
 class ApiService {
-  // TODO: URIs will have to be changed when the API is set up properly.
+  // TODO: URIs will have to be changed when the API is set up properly, as this
+  // currently just points to localhost on the emulator.
+  // Maybe get this from Config file.
   Future<List<Patient>> fetchPatients() async {
     final response =
         await http.get(Uri.parse('https://10.0.2.2:7216/api/patients'));
@@ -62,6 +64,16 @@ class ApiService {
       return Patient.fromJson(json.decode(response.body));
     } else {
       throw Exception("Failed to create patient");
+    }
+  }
+
+  Future<bool> deletePatient(String id) async {
+    final response =
+        await http.delete(Uri.parse('https://10.0.2.2:7216/api/patients/$id'));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
