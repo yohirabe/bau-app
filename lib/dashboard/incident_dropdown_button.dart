@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:bau_app/locator.dart';
 
 class IncidentDropdownButton extends StatefulWidget {
-  final ValueSetter<String> callback;
+  final ValueSetter<int> callback;
   final String? persistentHintText;
 
   const IncidentDropdownButton(
@@ -14,8 +14,8 @@ class IncidentDropdownButton extends StatefulWidget {
 }
 
 class _IncidentDropdownButtonState extends State<IncidentDropdownButton> {
-  String? dropdownValue;
-  late Future<List<String>> futureIncidents;
+  int? dropdownValue;
+  late Future<List<int>> futureIncidents;
 
   @override
   Widget build(BuildContext context) {
@@ -24,31 +24,29 @@ class _IncidentDropdownButtonState extends State<IncidentDropdownButton> {
         future: futureIncidents,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<String> dropdownList = snapshot.data!.toList();
-            return DropdownButton<String>(
+            List<int> dropdownList = snapshot.data!.toList();
+
+            return DropdownButton<int>(
               isExpanded: true,
-              //focusColor: Colors.grey,
               icon: const Icon(Icons.arrow_drop_down),
               hint: Text(
                   // If persistent hint text is not null, always show that no matter what is selected.
-                  widget.persistentHintText ?? (dropdownValue ?? "Incident")),
-              onChanged: (String? value) {
+                  widget.persistentHintText ??
+                      (dropdownValue ?? "Incident").toString()),
+              onChanged: (int? value) {
+                int selectedIncident = value!;
                 setState(() {
-                  dropdownValue = value!;
+                  dropdownValue = selectedIncident;
                 });
-                widget.callback(value!);
+                widget.callback(selectedIncident);
               },
-              items: dropdownList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                    value: value, child: Text(value));
+              items: dropdownList.map<DropdownMenuItem<int>>((int value) {
+                return DropdownMenuItem<int>(
+                    value: value, child: Text(value.toString()));
               }).toList(),
             );
           } else if (snapshot.hasError) {
-            //return Text('$snapshot.error');
-            return InkWell(
-              child: const Text("An error occurred, tap to retry."),
-              onTap: () => setState(() {}),
-            );
+            return Text('$snapshot.error');
           }
           return const CircularProgressIndicator();
         });

@@ -71,7 +71,7 @@ Future<void> showDeleteDialogue(context, Patient patient) async {
         actions: [
           TextButton(
               onPressed: () {
-                locator<ApiService>().deletePatient(patient.id!);
+                locator<ApiService>().deletePatient(patient.id);
                 Navigator.pop(context);
               },
               child: const Text("Yes")),

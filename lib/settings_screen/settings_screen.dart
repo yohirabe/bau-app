@@ -8,10 +8,13 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final medicalControlPhoneText = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -19,7 +22,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             icon: const Icon(Icons.arrow_back),
           ),
           centerTitle: true,
-          title: const Text("Settings")),
-    );
+          title: const Text("Settings"),
+        ),
+        body: Form(
+          key: _formKey,
+          child: Column(children: <Widget>[
+            TextFormField(
+              controller: medicalControlPhoneText,
+            )
+          ]),
+        ));
   }
 }

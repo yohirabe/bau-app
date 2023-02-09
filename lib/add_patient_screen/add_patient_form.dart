@@ -24,7 +24,7 @@ class AddPatientForm extends StatefulWidget {
 class _AddPatientFormState extends State<AddPatientForm> {
   final _formKey = GlobalKey<FormState>();
   int? _estimatedAge;
-  String? _incident;
+  int? _incident;
   final _incidentText = TextEditingController();
   String? _selectedGender;
   final _genderCodes = {"Male": 1, "Female": 2, "Unknown": 0};
@@ -76,14 +76,12 @@ class _AddPatientFormState extends State<AddPatientForm> {
                   // Validate returns true if the form is valid, false otherwise.
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    Patient patient = Patient(
-                      id: null,
-                      incident: _incident!,
-                      gender: _genderCodes[_selectedGender]!,
-                      estimatedAge: _estimatedAge!,
-                      status: _status!,
-                      conditions: _conditions!,
-                    );
+                    PatientForCreationDto patient = PatientForCreationDto(
+                        incident: _incident!,
+                        gender: _genderCodes[_selectedGender]!,
+                        estimatedAge: _estimatedAge!,
+                        status: _status!,
+                        conditions: _conditions!);
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Uploading Patient')),
@@ -177,9 +175,9 @@ class _AddPatientFormState extends State<AddPatientForm> {
       Expanded(
         child: TextFormField(
           controller: _incidentText,
-          onSaved: (newValue) => _incident = newValue,
+          onSaved: (newValue) => _incident = int.parse(newValue!),
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value == null || value.isEmpty || !value.isDigits) {
               return 'Enter an incident number';
             }
             return null;
@@ -193,7 +191,7 @@ class _AddPatientFormState extends State<AddPatientForm> {
           persistentHintText: "Select an incident",
           callback: ((value) {
             _incident = value;
-            _incidentText.text = value;
+            _incidentText.text = value.toString();
           }),
         ),
       )

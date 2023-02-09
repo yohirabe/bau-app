@@ -1,5 +1,6 @@
 import 'package:bau_app/dashboard/medical_control_button.dart';
 import 'package:bau_app/services/patient_api_service.dart';
+import 'package:bau_app/settings_screen/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bau_app/dashboard/incident_dropdown_button.dart';
 import 'package:bau_app/dashboard/patient_element.dart';
@@ -15,7 +16,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  String? incident;
+  int? incident;
   late Future<List<Patient>> futurePatients;
 
   @override
@@ -26,9 +27,21 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    futurePatients = locator<ApiService>().fetchPatientsByIncident(incident);
+    incident != null
+        ? futurePatients =
+            locator<ApiService>().fetchPatientsByIncident(incident!)
+        : {};
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsScreen()),
+            );
+          },
+        ),
         title: const Text('Dashboard'),
         centerTitle: true,
       ),
