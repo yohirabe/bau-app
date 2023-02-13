@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:bau_app/locator.dart';
+import 'package:bau_app/services/config_service.dart';
 
-// This does not work on emulators
 class MedicalControlButton extends StatelessWidget {
   const MedicalControlButton({super.key});
 
@@ -9,10 +10,9 @@ class MedicalControlButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
         onPressed: () async {
-          // TODO: get real phone number from a config file
-          final Uri phone = Uri.parse("tel:+1234567890");
-
           try {
+            String phoneNumber = await locator<ConfigService>().readPhone();
+            final Uri phone = Uri.parse("tel:+$phoneNumber");
             if (await canLaunchUrl(phone)) await launchUrl(phone);
           } catch (error) {
             throw ("Cannot dial");

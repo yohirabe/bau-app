@@ -46,7 +46,7 @@ class _IncidentDropdownButtonState extends State<IncidentDropdownButton> {
               }).toList(),
             );
           } else if (snapshot.hasError) {
-            return Text('$snapshot.error');
+            return Text('${snapshot.error}');
           }
           return const CircularProgressIndicator();
         });

@@ -20,10 +20,8 @@ class PatientElement extends StatelessWidget {
   Widget build(BuildContext context) {
     StringBuffer patientStringBuffer = StringBuffer();
     patientStringBuffer.write(
-        '${patient.incident} - ${patient.estimatedAge} YO${_genderStrings[patient.gender]}');
-    for (String condition in patient.conditions) {
-      patientStringBuffer.write(" - $condition");
-    }
+        '${patient.incident} - ${patient.estimatedAge} YO${_genderStrings[patient.gender]} - ');
+    patientStringBuffer.writeAll(patient.conditions, " - ");
     return InkWell(
       onLongPress: () {
         showDeleteDialogue(context, patient);

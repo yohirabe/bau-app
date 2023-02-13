@@ -27,21 +27,31 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
-    incident != null
-        ? futurePatients =
-            locator<ApiService>().fetchPatientsByIncident(incident!)
-        : {};
+    if (incident != null) {
+      futurePatients = locator<ApiService>().fetchPatientsByIncident(incident!);
+    }
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsScreen()),
-            );
-          },
-        ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<int>(value: 1, child: Text("Refresh")),
+                const PopupMenuItem<int>(value: 0, child: Text("Settings"))
+              ];
+            },
+            onSelected: ((value) {
+              if (value == 0) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsScreen()));
+              } else if (value == 1) {
+                setState(() {});
+              }
+            }),
+          )
+        ],
         title: const Text('Dashboard'),
         centerTitle: true,
       ),
@@ -108,7 +118,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('$snapshot.error');
+          return Text('${snapshot.error}');
         }
         return const CircularProgressIndicator();
       },

@@ -7,7 +7,7 @@ import 'package:bau_app/locator.dart';
 import 'package:bau_app/add_patient_screen/guided_triage/guided_triage.dart';
 import 'package:bau_app/models/patient.dart';
 import 'package:bau_app/services/validator_extension_methods.dart';
-import '../services/patient_api_service.dart';
+import 'package:bau_app/services/patient_api_service.dart';
 
 class GuidedTriageResult {
   final int status;
@@ -84,11 +84,12 @@ class _AddPatientFormState extends State<AddPatientForm> {
                         conditions: _conditions!);
 
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Uploading Patient')),
+                      const SnackBar(content: Text('Submitting patient')),
                     );
 
                     Future<Patient> futurePatient =
                         locator<ApiService>().createPatient(patient);
+
                     // TODO: display confirmation that patient was created based on response
                     // TODO: Make refresh on exit consistent
                     // Pop with the additonal argument true, so that the dashboard knows

@@ -15,7 +15,7 @@ class ApiService {
       for (var element in jsonDecode(response.body)) {
         patients.add(Patient.fromJson(element));
       }
-      return patients;
+      return patients.reversed.toList();
     } else {
       throw Exception("Failed to load patients.");
     }
@@ -30,7 +30,7 @@ class ApiService {
       for (var element in jsonDecode(response.body)) {
         incidents.add(element);
       }
-      return incidents;
+      return incidents.reversed.toList();
     } else {
       throw Exception("Failed to load incidents.");
     }
@@ -45,7 +45,7 @@ class ApiService {
       for (var element in jsonDecode(response.body)) {
         patients.add(Patient.fromJson(element));
       }
-      return patients;
+      return patients.reversed.toList();
     } else {
       throw Exception("Failed to load patients.");
     }

@@ -11,7 +11,7 @@ void main() async {
   // SecurityContext.defaultContext
   //     .setTrustedCertificatesBytes(data.buffer.asUint8List());
 
-  // TODO: remove when proper certs are added
+  // TODO: Fix certificates issue
   HttpOverrides.global = MyHttpOverrides();
 
   setupLocator(); // Child widgets can use this to locate api service.
@@ -49,7 +49,7 @@ class _RootPageState extends State<RootPage> {
   }
 }
 
-// TODO: Remove when using proper certificates!
+// TODO: Fix certificates issue
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
