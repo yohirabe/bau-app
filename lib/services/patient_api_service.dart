@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/patient.dart';
 
 class ApiService {
+  // TODO: Catch thrown exceptions wherever calls to these methods are made.
   // TODO: URIs will have to be changed when the API is set up properly, as this
   // currently just points to localhost on the emulator.
   // Maybe get this from Config file.

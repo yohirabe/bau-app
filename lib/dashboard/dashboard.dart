@@ -4,7 +4,7 @@ import 'package:bau_app/settings_screen/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bau_app/dashboard/incident_dropdown_button.dart';
 import 'package:bau_app/dashboard/patient_element.dart';
-import 'package:bau_app/add_patient_screen/add_patient.dart';
+import 'package:bau_app/add_patient_screen/add_patient_screen.dart';
 import 'package:bau_app/models/patient.dart';
 import 'package:bau_app/locator.dart';
 
@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
                     MaterialPageRoute(
                         builder: (context) => const SettingsScreen()));
               } else if (value == 1) {
-                setState(() {});
+                refreshDashboard();
               }
             }),
           )
@@ -75,15 +75,14 @@ class _DashboardState extends State<Dashboard> {
               style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(20.0),
                   shape: const StadiumBorder()),
-              onPressed: () async {
-                final bool? shouldRefresh = await Navigator.push(
+              onPressed: () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const AddPatientScreen()),
+                      builder: (context) => AddPatientScreen(
+                            refreshDashboard: refreshDashboard,
+                          )),
                 );
-                if (shouldRefresh ?? false) {
-                  setState(() {});
-                }
               },
               child: const Text(
                 'Add New Patient',
@@ -113,6 +112,7 @@ class _DashboardState extends State<Dashboard> {
                   itemBuilder: (BuildContext context, int index) {
                     return PatientElement(
                       patient: snapshot.data![index],
+                      refreshDashboard: refreshDashboard,
                     );
                   }),
             ),
@@ -123,5 +123,10 @@ class _DashboardState extends State<Dashboard> {
         return const CircularProgressIndicator();
       },
     );
+  }
+
+  void refreshDashboard() {
+    // Used as a callback function.
+    setState(() {});
   }
 }

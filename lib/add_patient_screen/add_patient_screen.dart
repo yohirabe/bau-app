@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'add_patient_form.dart';
 
 class AddPatientScreen extends StatefulWidget {
-  const AddPatientScreen({super.key});
+  final Function refreshDashboard;
+  const AddPatientScreen({super.key, required this.refreshDashboard});
 
   @override
   State<AddPatientScreen> createState() => AddPatientScreenState();
@@ -22,7 +23,9 @@ class AddPatientScreenState extends State<AddPatientScreen> {
         centerTitle: true,
         title: const Text('Add New Patient'),
       ),
-      body: const AddPatientForm(),
+      body: AddPatientForm(
+        refreshDashboard: widget.refreshDashboard,
+      ),
     );
   }
 }

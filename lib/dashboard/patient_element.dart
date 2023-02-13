@@ -13,8 +13,10 @@ var _genderStrings = {0: "U", 1: "M", 2: "F", 9: "N/A"};
 
 class PatientElement extends StatelessWidget {
   final Patient patient;
+  final Function refreshDashboard;
 
-  const PatientElement({super.key, required this.patient});
+  const PatientElement(
+      {super.key, required this.patient, required this.refreshDashboard});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class PatientElement extends StatelessWidget {
     patientStringBuffer.writeAll(patient.conditions, " - ");
     return InkWell(
       onLongPress: () {
-        showDeleteDialogue(context, patient);
+        showDeleteDialogue(context);
       },
       child: Card(
           shape: const RoundedRectangleBorder(
@@ -56,30 +58,40 @@ class PatientElement extends StatelessWidget {
           )),
     );
   }
-}
 
-Future<void> showDeleteDialogue(context, Patient patient) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: true, // user does not have to tap button
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Delete Patient"),
-        content: const Text("Are you sure you want to delete this patient?"),
-        actions: [
-          TextButton(
-              onPressed: () {
-                locator<ApiService>().deletePatient(patient.id);
-                Navigator.pop(context);
-              },
-              child: const Text("Yes")),
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("No"))
-        ],
-      );
-    },
-  );
+  Future<void> showDeleteDialogue(context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user does not have to tap button
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Patient"),
+          content: const Text("Are you sure you want to delete this patient?"),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Future<bool> deleted =
+                      locator<ApiService>().deletePatient(patient.id);
+                  confirmDeletion(context, deleted);
+                  Navigator.pop(context);
+                },
+                child: const Text("Yes")),
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text("No"))
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> confirmDeletion(context, Future<bool> deleted) async {
+    if (await deleted) {
+      //ScaffoldMessenger.of(context).showSnackBar(
+      //    const SnackBar(content: Text('Successfully Deleted Patient')));
+      refreshDashboard();
+    }
+  }
 }

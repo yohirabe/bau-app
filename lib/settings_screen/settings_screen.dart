@@ -51,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Saving settings')));
+                        const SnackBar(content: Text('Saved Settings')));
                   }
                 },
                 child: const Text("Save"))

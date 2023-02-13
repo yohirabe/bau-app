@@ -16,7 +16,9 @@ class GuidedTriageResult {
 }
 
 class AddPatientForm extends StatefulWidget {
-  const AddPatientForm({super.key});
+  final Function refreshDashboard;
+
+  const AddPatientForm({super.key, required this.refreshDashboard});
   @override
   State<AddPatientForm> createState() => _AddPatientFormState();
 }
@@ -83,18 +85,12 @@ class _AddPatientFormState extends State<AddPatientForm> {
                         status: _status!,
                         conditions: _conditions!);
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Submitting patient')),
-                    );
-
+                    // TODO: Deal with case where patient was not created. An exception will be thrown here.
                     Future<Patient> futurePatient =
                         locator<ApiService>().createPatient(patient);
+                    confirmSubmission(context, futurePatient);
 
-                    // TODO: display confirmation that patient was created based on response
-                    // TODO: Make refresh on exit consistent
-                    // Pop with the additonal argument true, so that the dashboard knows
-                    // to refresh its widgets
-                    Navigator.pop(context, true);
+                    Navigator.pop(context);
                   }
                 },
                 child: const Text('Submit'),
@@ -105,6 +101,13 @@ class _AddPatientFormState extends State<AddPatientForm> {
         const MedicalControlButton(),
       ]),
     );
+  }
+
+  Future<void> confirmSubmission(context, Future<Patient> futurePatient) async {
+    Patient _ = await futurePatient;
+    //ScaffoldMessenger.of(context).showSnackBar(
+    //    const SnackBar(content: Text('Successfully Deleted Patient')));
+    widget.refreshDashboard();
   }
 
   TextFormField statusFormField(BuildContext context) {
