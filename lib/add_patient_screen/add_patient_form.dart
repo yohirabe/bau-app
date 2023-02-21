@@ -85,12 +85,14 @@ class _AddPatientFormState extends State<AddPatientForm> {
                         status: _status!,
                         conditions: _conditions!);
 
-                    // TODO: Deal with case where patient was not created. An exception will be thrown here.
-                    Future<Patient> futurePatient =
-                        locator<ApiService>().createPatient(patient);
-                    confirmSubmission(context, futurePatient);
-
-                    Navigator.pop(context);
+                    try {
+                      Future<Patient> futurePatient =
+                          locator<ApiService>().createPatient(patient);
+                      // Navigator.pop(context);
+                      confirmSubmission(context, futurePatient);
+                    } catch (e) {
+                      // TODO: Show error dialog.
+                    }
                   }
                 },
                 child: const Text('Submit'),
@@ -104,9 +106,8 @@ class _AddPatientFormState extends State<AddPatientForm> {
   }
 
   Future<void> confirmSubmission(context, Future<Patient> futurePatient) async {
-    Patient _ = await futurePatient;
-    //ScaffoldMessenger.of(context).showSnackBar(
-    //    const SnackBar(content: Text('Successfully Deleted Patient')));
+    await futurePatient;
+    Navigator.pop(context);
     widget.refreshDashboard();
   }
 
@@ -182,7 +183,7 @@ class _AddPatientFormState extends State<AddPatientForm> {
           onSaved: (newValue) => _incident = int.parse(newValue!),
           validator: (value) {
             if (value == null || value.isEmpty || !value.isDigits) {
-              return 'Enter an incident number';
+              return 'Enter a valid incident number';
             }
             return null;
           },

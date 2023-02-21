@@ -4,13 +4,6 @@ import 'dashboard/dashboard.dart';
 import 'locator.dart';
 
 void main() async {
-  // Certificate stuff
-  // WidgetsFlutterBinding.ensureInitialized();
-  // ByteData data =
-  //     await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-  // SecurityContext.defaultContext
-  //     .setTrustedCertificatesBytes(data.buffer.asUint8List());
-
   // TODO: Fix certificates issue
   HttpOverrides.global = MyHttpOverrides();
 

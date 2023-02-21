@@ -32,7 +32,8 @@
             android:value="2" />
     </application>
 
-    <!-- Provide required visibility configuration for API level 30 and above -->
+
+    <!-- Provide required visibility configuration for API level 30 and above. -->
     <queries> 
       <!-- If your app checks for call support -->
          <intent>
@@ -40,5 +41,6 @@
             <data android:scheme="tel" />
         </intent>
     </queries>
+
 
 </manifest>

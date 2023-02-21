@@ -22,7 +22,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-    futurePatients = locator<ApiService>().fetchPatients();
+    // Initialise with empty list.
+    futurePatients = Future<List<Patient>>.value([]);
   }
 
   @override
@@ -36,7 +37,6 @@ class _DashboardState extends State<Dashboard> {
           PopupMenuButton(
             itemBuilder: (context) {
               return [
-                const PopupMenuItem<int>(value: 1, child: Text("Refresh")),
                 const PopupMenuItem<int>(value: 0, child: Text("Settings"))
               ];
             },
@@ -46,8 +46,6 @@ class _DashboardState extends State<Dashboard> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => const SettingsScreen()));
-              } else if (value == 1) {
-                refreshDashboard();
               }
             }),
           )
@@ -118,7 +116,13 @@ class _DashboardState extends State<Dashboard> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
+          return Column(
+            children: <Widget>[
+              Text('${snapshot.error}'),
+              TextButton(
+                  onPressed: refreshDashboard, child: const Text("Retry"))
+            ],
+          );
         }
         return const CircularProgressIndicator();
       },

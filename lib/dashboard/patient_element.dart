@@ -70,9 +70,13 @@ class PatientElement extends StatelessWidget {
           actions: [
             TextButton(
                 onPressed: () {
-                  Future<bool> deleted =
-                      locator<ApiService>().deletePatient(patient.id);
-                  confirmDeletion(context, deleted);
+                  try {
+                    Future<bool> deleted =
+                        locator<ApiService>().deletePatient(patient.id);
+                    confirmDeletion(context, deleted);
+                  } catch (e) {
+                    // TODO: Show error dialog.
+                  }
                   Navigator.pop(context);
                 },
                 child: const Text("Yes")),
@@ -89,8 +93,6 @@ class PatientElement extends StatelessWidget {
 
   Future<void> confirmDeletion(context, Future<bool> deleted) async {
     if (await deleted) {
-      //ScaffoldMessenger.of(context).showSnackBar(
-      //    const SnackBar(content: Text('Successfully Deleted Patient')));
       refreshDashboard();
     }
   }

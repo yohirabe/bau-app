@@ -3,10 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/patient.dart';
 
 class ApiService {
-  // TODO: Catch thrown exceptions wherever calls to these methods are made.
-  // TODO: URIs will have to be changed when the API is set up properly, as this
-  // currently just points to localhost on the emulator.
-  // Maybe get this from Config file.
+  // TODO: These http requests currently point to localhost.
   Future<List<Patient>> fetchPatients() async {
     final response =
         await http.get(Uri.parse('https://10.0.2.2:7216/api/patients'));
